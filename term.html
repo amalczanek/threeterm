@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+threeterm - Three.JS WebGL terminal that can be easily added to your three.js
+application. To use it, call terminal.create() with the parameters you want
+to use for your size and row/col count.
+
+Software License: Anthony Nicholas Usable Source Without Implied Damages or Earnings v1
+
+This software license allows for the source code associated with the included files
+to be used by any party without implied damages or earnings from the use of the files.
+That means, I don't expect to earn anything from your using this software, nor am I
+responisble for an damages incurred from using this software. It's all yours, and
+you take all responsibility for what happens once you use it.
+
+The license to subject to change, but versions released under a certain version
+of the license will forever remain licenesed under that version.
+
+-->
+<html lang="en">
+  <head>
+  </head>
+  <body id="pageBody">
+    <div id="container">
+    </div>
+    <script src="js/vendor/jquery-3.2.1.js"></script>
+    <script src="js/vendor/three.js"></script>
+    <script src="js/threeterm.js"></script>
+    <script>
+    			var container, clock;
+    			var camera, scene, renderer, object, textMeshANM, spritey;
+          var turnPctX = 0, turnPctY = 0;
+          var wireframe = null;
+          var cssElement, cssObject;
+          var goingUp = false;
+          var pageFloatAnimation = false;
+          var pageRotateAnimation = false;
+
+          $(document).on( "mousewheel DOMMouseScroll", function(e){
+              e.preventDefault();
+          });
+
+
+
+
+          var cameraCSS, sceneCSS, rendererCSS;
+
+    			init();
+    			animate();
+    			function init() {
+            container = document.getElementById( 'container' );
+    				camera = new THREE.PerspectiveCamera( 50, (window.innerWidth) / window.innerHeight, 1, 2000 );
+    				camera.position.set( 2, 4, 5 );
+    				clock = new THREE.Clock();
+    				scene = new THREE.Scene();
+    				var loader = new THREE.JSONLoader();
+
+
+    				// lights
+    				var ambientLight = new THREE.AmbientLight( 0xcccccc );
+    				scene.add( ambientLight );
+    				var pointLight = new THREE.PointLight( 0xff4400, 5, 30 );
+    				pointLight.position.set( 5, 0, 0 );
+    				scene.add( pointLight );
+    				// renderer
+    				renderer = new THREE.WebGLRenderer();
+    				renderer.setPixelRatio( window.devicePixelRatio );
+    				renderer.setSize( window.innerWidth, window.innerHeight );
+    				container.appendChild( renderer.domElement );
+    				// events
+    				window.addEventListener( 'resize', onWindowResize, false );
+
+
+            terminal.create(scene, 24, 40, -1.0, 2.0, -2.0, 7.5, 1.5, 4.5)
+
+    			}
+          //
+          pageBody.onmousemove = function ( e ) {
+            turnPctX = e.clientX / window.innerWidth;
+            turnPctY = e.clientY / window.innerWidth;
+          };
+          //
+          document.onkeydown = function(evt) {
+              evt = evt || window.event;
+              if(evt.keyCode == 13) {
+                terminal.enter();
+              } else if(evt.keyCode == 8) {
+                terminal.backspace();
+              } else if(evt.code == "ShiftLeft" || evt.code == "ShiftRight" || evt.code == "CapsLock") {
+                // ignore
+              } else {
+                var char = String.fromCharCode(evt.keyCode);
+                if(!evt.shiftKey) char = char.toLowerCase();
+                terminal.writeCharToTerminal(char);
+              }
+          };
+    			//
+    			function onWindowResize( event ) {
+    				renderer.setSize( window.innerWidth, window.innerHeight );
+    				camera.aspect = (window.innerWidth) / window.innerHeight;
+    				camera.updateProjectionMatrix();
+    			}
+    			//
+    			function animate() {
+    				requestAnimationFrame( animate );
+    				render();
+            terminal.animate();
+    			}
+    			function render() {
+    				var timer = Date.now() * 0.0005;
+    				renderer.render( scene, camera );
+    			}
+    		</script>
+  </body>
+</html>
