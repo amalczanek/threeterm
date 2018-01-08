@@ -87,9 +87,31 @@ of the license will forever remain licenesed under that version.
                 terminal.backspace();
               } else if(evt.code == "ShiftLeft" || evt.code == "ShiftRight" || evt.code == "CapsLock") {
                 // ignore
-              } else {
+                var i = 0;
+                i++;
+              } else if(String.fromCharCode(evt.keyCode).match(/^[a-zA-Z]+$/)) {
                 var char = String.fromCharCode(evt.keyCode);
                 if(!evt.shiftKey) char = char.toLowerCase();
+                terminal.writeCharToTerminal(char);
+              } else {
+                var char = null;
+                switch(evt.code) {
+                  case "BracketLeft": evt.shiftKey ? char = "{" : char = "["; break;
+                  case "BracketRight": evt.shiftKey ? char = "}" : char = "]"; break;
+                  case "Slash": evt.shiftKey ? char = "?" : char = "/"; break;
+                  case "Comma": evt.shiftKey ? char = "<" : char = ","; break;
+                  case "Period": evt.shiftKey ? char = ">" : char = "."; break;
+                  case "Digit1": evt.shiftKey ? char = "!" : char = "1"; break;
+                  case "Digit2": evt.shiftKey ? char = "@" : char = "2"; break;
+                  case "Digit3": evt.shiftKey ? char = "#" : char = "3"; break;
+                  case "Digit4": evt.shiftKey ? char = "$" : char = "4"; break;
+                  case "Digit5": evt.shiftKey ? char = "%" : char = "5"; break;
+                  case "Digit6": evt.shiftKey ? char = "^" : char = "6"; break;
+                  case "Digit7": evt.shiftKey ? char = "&" : char = "7"; break;
+                  case "Digit8": evt.shiftKey ? char = "*" : char = "8"; break;
+                  case "Digit9": evt.shiftKey ? char = "(" : char = "9"; break;
+                  case "Digit0": evt.shiftKey ? char = ")" : char = "0"; break;
+                }
                 terminal.writeCharToTerminal(char);
               }
           };
