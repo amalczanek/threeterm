@@ -94,7 +94,7 @@ var terminal = {
         this.character[colCounter][rowCounter].geometry.faceVertexUvs[0][0] = [];
         this.character[colCounter][rowCounter].geometry.faceVertexUvs[0][1] = [];
 
-        this.character[colCounter][rowCounter].character = " ";
+        this.character[colCounter][rowCounter].character = "NULL";
         this._setCharUV(colCounter, rowCounter, true);
 
         // singleGeometry.merge(this.character[colCounter][rowCounter].geometry);
@@ -158,8 +158,18 @@ var ctr = 0;
       ['G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V',],
       ['W','X','Y','Z',' ',':',';','{','}','(',')','\\','/','`','\'','"',],
       ['!','@','#','$','%','^','&','*','_','-','+',',','.','<','>','|',],
-      ['=','?', 'Cursor', '1','2','3','4','5','6','7','8','9','0','[',']']
-    ]
+      ['=','?', 'Cursor', '1','2','3','4','5','6','7','8','9','0','[',']',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','',''],
+      ['','','','','','','','','','','','','','','','NULL'],
+    ];
 
     for(var col = 0; col < charMap.length; col++) {
         for(var row = 0; row < charMap[col].length; row++) {
@@ -220,11 +230,11 @@ var ctr = 0;
       // // blink cursor
       if(parseInt(miliEpochTime) % 2000 == 0) {
         if(this.cursor.col > this.cols) { this._moveCursor(true, true); }
-        if(this.character[this.cursor.col][this.cursor.row].character === " ") {
-          this._setCharUV(this.cursor.col, this.cursor.row, false, "_");
+        if(this.character[this.cursor.col][this.cursor.row].character === "NULL") {
+          this._setCharUV(this.cursor.col, this.cursor.row, false, "Cursor");
           // this.character[this.cursor.col][this.cursor.row].character = "Cursor";
         } else {
-          this._setCharUV(this.cursor.col, this.cursor.row, false, " ");
+          this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
           // this.character[this.cursor.col][this.cursor.row].character = " ";
         }
       }
@@ -246,16 +256,38 @@ var ctr = 0;
       }
     } else if(!forward) {
       if(this.cursor.col == 0) {
-        this.cursor.col = this.cols - 1;
-        this.cursor.row++;
+        if(this.cursor.row + 1 < this.rows) {
+          this.cursor.col = this.cols - 1;
+          this.cursor.row++;
+          if(this.character[this.cursor.col][this.cursor.row].character === 'NULL') {
+            this._moveCursor(false, false);
+          }
+        }
       } else {
         this.cursor.col--;
+        if(this.character[this.cursor.col][this.cursor.row].character === 'NULL') {
+          while(this.cursor.col > 0 && this.character[this.cursor.col][this.cursor.row].character === 'NULL') {
+            this.character[this.cursor.col][this.cursor.row].character = 'NULL';
+            this.cursor.col--;
+          }
+
+          if(this.cursor.col == 0 && this.character[this.cursor.col][this.cursor.row].character == 'NULL') {
+            this.cursor.row++;
+            this.curosr.col = this.cols - 1;
+            this._moveCursor(false, false);
+          }
+        }
       }
     }
+
+    if(this.cursor.col >= this.cols) this.cursor.col = this.cols - 1;
+    if(this.cursor.row >= this.rows) this.cursor.row = this.rows - 1;
+    if(this.cursor.col < 0) this.cursor.col = 0;
+    if(this.cursor.row < 0) this.cursor.row = 0;
   },
   writeCharToTerminal: function(character) {
-    console.log(character);
-    console.log(this.character[this.cursor.col][this.cursor.row].character);
+    // console.log(character);
+    // console.log(this.character[this.cursor.col][this.cursor.row].character);
     this._setCharUV(this.cursor.col, this.cursor.row, false, character);
     // this.character[this.cursor.col][this.cursor.row].character = character;
     this._moveCursor();
@@ -264,7 +296,7 @@ var ctr = 0;
     this._moveCursor(true, true);
   },
   backspace : function() {
-    this._setCharUV(this.cursor.col, this.cursor.row, false, " ");
+    this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
     // this.character[this.cursor.col][this.cursor.row].character = " ";
     this._moveCursor(false, false);
   }
