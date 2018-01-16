@@ -227,7 +227,7 @@ var ctr = 0;
       }
 
       // // blink cursor
-      if(parseInt(miliEpochTime) % 2000 == 0) {
+      if(parseInt(miliEpochTime) % 200 < 100) {
         if(this.cursor.col > this.cols) { this._moveCursor(true, true); }
         if(this.character[this.cursor.col][this.cursor.row].character === "NULL") {
           this._setCharUV(this.cursor.col, this.cursor.row, false, "Cursor");
@@ -292,6 +292,7 @@ var ctr = 0;
     this._moveCursor();
   },
   enter : function() {
+    this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
     this._moveCursor(true, true);
   },
   backspace : function() {
