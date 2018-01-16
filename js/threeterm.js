@@ -294,13 +294,15 @@ var ctr = 0;
   },
   enter : function() {
     this._moveCursor(true, true);
+    this.character[this.cursor.col][this.cursor.row].isUserCharacter
   },
   backspace : function() {
-    if(this.character[this.cursor.col][this.cursor.row].isUserCharacter) {
-      this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
+    if(this.cursor.col == 0 || this.character[this.cursor.col - 1][this.cursor.row].isUserCharacter) {
       // this.character[this.cursor.col][this.cursor.row].character = " ";
       this._moveCursor(false, false);
+      this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
     }
   }
 
 }
+dd
