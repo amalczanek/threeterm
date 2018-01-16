@@ -83,6 +83,7 @@ var terminal = {
 
         // if(rowCounter != 0) { rowCounter++; continue; }
 
+        this.character[colCounter][rowCounter].isUserCharacter = true;
         this.character[colCounter][rowCounter].geometry = this._rect(_x + this.position.x, _y + this.position.y, _x + charWidth + this.position.x, _y + charHeight + this.position.y);
           // console.log("R:" + rowCounter + "  C: " + colCounter + "  x1=" + _x
           // + "     x2=" + (_x + charWidth)
@@ -227,7 +228,7 @@ var ctr = 0;
       }
 
       // // blink cursor
-      if(parseInt(miliEpochTime) % 200 < 100) {
+      if(parseInt(miliEpochTime) % 2000 == 0) {
         if(this.cursor.col > this.cols) { this._moveCursor(true, true); }
         if(this.character[this.cursor.col][this.cursor.row].character === "NULL") {
           this._setCharUV(this.cursor.col, this.cursor.row, false, "Cursor");
@@ -284,21 +285,22 @@ var ctr = 0;
     if(this.cursor.col < 0) this.cursor.col = 0;
     if(this.cursor.row < 0) this.cursor.row = 0;
   },
-  writeCharToTerminal: function(character) {
+  writeCharToTerminal: function(character, isUserCharacter) {
     // console.log(character);
     // console.log(this.character[this.cursor.col][this.cursor.row].character);
     this._setCharUV(this.cursor.col, this.cursor.row, false, character);
-    // this.character[this.cursor.col][this.cursor.row].character = character;
+    this.character[this.cursor.col][this.cursor.row].isUserCharacter = isUserCharacter !== null ? isUserCharacter : false;
     this._moveCursor();
   },
   enter : function() {
-    this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
     this._moveCursor(true, true);
   },
   backspace : function() {
-    this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
-    // this.character[this.cursor.col][this.cursor.row].character = " ";
-    this._moveCursor(false, false);
+    if(this.character[this.cursor.col][this.cursor.row].isUserCharacter) {
+      this._setCharUV(this.cursor.col, this.cursor.row, false, "NULL");
+      // this.character[this.cursor.col][this.cursor.row].character = " ";
+      this._moveCursor(false, false);
+    }
   }
 
 }

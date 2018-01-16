@@ -92,7 +92,7 @@ of the license will forever remain licensed under that version.
               } else if(String.fromCharCode(evt.keyCode).match(/^[a-zA-Z]+$/)) {
                 var char = String.fromCharCode(evt.keyCode);
                 if(!evt.shiftKey) char = char.toLowerCase();
-                terminal.writeCharToTerminal(char);
+                terminal.writeCharToTerminal(char, true);
               } else {
                 var char = null;
                 switch(evt.code) {
@@ -113,7 +113,7 @@ of the license will forever remain licensed under that version.
                   case "Digit0": evt.shiftKey ? char = ")" : char = "0"; break;
                   case "Semicolon": evt.shiftKey ? char = ":" : char = ";"; break;
                 }
-                terminal.writeCharToTerminal(char);
+                terminal.writeCharToTerminal(char, true);
               }
           };
     			//
